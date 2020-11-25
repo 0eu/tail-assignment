@@ -4,12 +4,12 @@ from tail.core import Tail
 
 def parse_arguments():
     args = sys.argv[1:]
-    if not args or len(args) > 2:
-        raise RuntimeError('Usage: tail <-f> <filename>') 
     if len(args) == 2 and args[0] == '-f':
         return (True, args[1])
-    if len(args) == 1:
+    elif len(args) == 1:
         return (False, args[0])
+    else:
+        raise RuntimeError('Usage: tail <-f> <filename>') 
 
 def main():
     try:
