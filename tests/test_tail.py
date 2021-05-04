@@ -1,43 +1,14 @@
-import unittest
-from tail.core import Tail
-from tests.helper import return_rows_list
+import pytest
+from tail import read_last_lines, follow_lines
 
 
-class TestTail(unittest.TestCase):
-    def test_empty_file(self):
-        filename = 'tests/test_data/empty.log'
-        actual = return_rows_list(filename, Tail)
-        expected = []
-        self.assertEqual(actual, expected) 
-        self.assertEqual(len(actual), len(expected)) 
-
-    def test_empty_lines_file(self):
-        filename = 'tests/test_data/empty_lines.log'
-        actual = return_rows_list(filename, Tail)
-        expected = ['\n'] * 10
-        self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), len(expected)) 
-
-    def test_dotted_file(self):
-        filename = 'tests/test_data/dotted.log'
-        actual = return_rows_list(filename, Tail)
-        expected = ['.\n', '\n', '.\n', '\n', '.\n', '\n', '\n', '.\n', '\n']
-        self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), len(expected)) 
-
-    def test_short_file(self):
-        filename = 'tests/test_data/short.log'
-        actual = return_rows_list(filename, Tail)
-        expected = ['1\n', 'a\n']
-        self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), len(expected)) 
-
-    def test_numbers_file(self):
-        filename = 'tests/test_data/numbers.log'
-        actual = return_rows_list(filename, Tail)
-        expected = ['6\n', '7\n', '\n', '\n', '8\n', '\n', '9\n', '10\n', '\n', '11\n']
-        self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), len(expected)) 
-
-if __name__ == '__main__':
-    unittest.main()
+@pytest.mark.parametrize("file_,expected", [
+    ("tests/test_data/empty.log", []), 
+    ("tests/test_data/empty_lines.log", ['\n'] * 10), 
+    ("tests/test_data/short.log", ['1\n', 'a\n']),
+    ("tests/test_data/numbers.log", ['6\n', '7\n', '\n', '\n', '8\n', '\n', '9\n', '10\n', '\n', '11\n'])
+])
+def test_input_various_length(file_, expected):
+    with open(file_, 'r') as fh:
+        actual = list(read_last_lines(fh)) 
+        assert actual == expected 
