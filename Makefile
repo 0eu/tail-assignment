@@ -15,4 +15,3 @@ generate: ## Append logs to a file with a regular interval
 
 clean: ## Delete pycache directories
 	@find . -type d -name __pycache__ -exec rm -r {} \+
-
